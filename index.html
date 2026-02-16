@@ -222,6 +222,44 @@
 			.settings-btn {
 				display: none !important;
 			}
+			/* START overlay */
+.start-overlay{
+  position:absolute;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter: blur(6px);
+}
+
+.start-btn{
+  font-size:22px;
+  padding:14px 22px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+
+.countdown{
+  font-size:64px;
+  font-weight:800;
+  color:#fff;
+  text-shadow:0 0 18px rgba(255,255,255,.35);
+}
+
+.start-hint{
+  font-size:14px;
+  opacity:.85;
+  color:#fff;
+}
+
+.hidden{ display:none !important; }
+
 		</style>
 		<meta name="msapplication-TileColor" content="#000000" />
 		<meta name="msapplication-TileImage" content="./images/favicon.png" />
@@ -262,6 +300,46 @@
 		<!-- App -->
 		<div class="container">
 			<div class="stage-container remove">
+				<script>
+const overlay = document.getElementById("start-overlay");
+const startBtn = document.getElementById("start-btn");
+const countdown = document.getElementById("countdown");
+
+startBtn.addEventListener("click", async () => {
+
+  // bật sound của hệ thống pháo hoa
+  const soundBtn = document.querySelector(".sound-btn");
+  if (soundBtn) soundBtn.click();
+
+  // countdown
+  startBtn.classList.add("hidden");
+  countdown.classList.remove("hidden");
+
+  let n = 3;
+  countdown.textContent = n;
+
+  const timer = setInterval(() => {
+    n--;
+    if (n > 0) {
+      countdown.textContent = n;
+    } else if (n === 0) {
+      countdown.textContent = "🎉";
+    } else {
+      clearInterval(timer);
+      overlay.classList.add("hidden");
+    }
+  }, 900);
+
+});
+</script>
+
+				 <!-- START OVERLAY (thêm đoạn này) -->
+  <div id="start-overlay" class="start-overlay">
+    <button id="start-btn" class="start-btn">START</button>
+    <div id="countdown" class="countdown hidden">3</div>
+    <div class="start-hint">Chạm để bắt đầu & bật nhạc 🔊</div>
+  </div>
+
 				<!-- Layer lời chúc bay trên trời -->
 				<div class="wishes-layer" id="wishes-layer"></div>
 				<div class="canvas-container">
@@ -371,5 +449,38 @@
 		<script src="./js/Stage.js"></script>
 		<script src="./js/MyMath.js"></script>
 		<script src="./js/script.js"></script>
+		<script>
+const overlay = document.getElementById("start-overlay");
+const startBtn = document.getElementById("start-btn");
+const countdown = document.getElementById("countdown");
+
+startBtn.addEventListener("click", async () => {
+
+    // Click nút bật sound gốc của pháo hoa
+    const soundBtn = document.querySelector(".sound-btn");
+    if (soundBtn) soundBtn.click();
+
+    // Countdown
+    startBtn.classList.add("hidden");
+    countdown.classList.remove("hidden");
+
+    let n = 3;
+    countdown.textContent = n;
+
+    const timer = setInterval(() => {
+        n--;
+
+        if (n > 0) {
+            countdown.textContent = n;
+        } else if (n === 0) {
+            countdown.textContent = "🎉";
+        } else {
+            clearInterval(timer);
+            overlay.classList.add("hidden");
+        }
+    }, 900);
+});
+</script>
+
 	</body>
 </html>
