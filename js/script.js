@@ -3069,6 +3069,7 @@ const Spark = {
 };
 
 //音效管理器
+let bgm;   // nhạc nền
 const soundManager = {
 	baseURL: "./audio/",
 	ctx: new (window.AudioContext || window.webkitAudioContext)(),
@@ -3148,22 +3149,25 @@ const soundManager = {
 	},
 
 	pauseAll() {
-		this.ctx.suspend();
-	},
+    this.ctx.suspend();
+    if (bgm) bgm.pause();
+},
 
 	resumeAll() {
-		// Play a sound with no volume for iOS. This 'unlocks' the audio context when the user first enables sound.
-		this.playSound("lift", 0);
-		// Chrome mobile requires interaction before starting audio context.
-		// The sound toggle button is triggered on 'touchstart', which doesn't seem to count as a full
-		// interaction to Chrome. I guess it needs a click? At any rate if the first thing the user does
-		// is enable audio, it doesn't work. Using a setTimeout allows the first interaction to be registered.
-		// Perhaps a better solution is to track whether the user has interacted, and if not but they try enabling
-		// sound, show a tooltip that they should tap again to enable sound.
-		setTimeout(() => {
-			this.ctx.resume();
-		}, 250);
-	},
+    this.playSound("lift", 0);
+
+    if (!bgm) {
+        bgm = new Audio("./audio/tet2026.mp3");
+        bgm.loop = true;
+        bgm.volume = 0.6;
+    }
+
+    setTimeout(() => {
+        this.ctx.resume();
+        bgm.play().catch(() => {});
+    }, 250);
+},
+
 
 	// Private property used to throttle small burst sounds.
 	_lastSmallBurstTime: 0,
